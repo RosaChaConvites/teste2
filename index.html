@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosa Chá Convites - Atendimento de Noivas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playwrite+IE+Guides&display=swap');
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffe6f2;
+            margin: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+   
+        h1 {
+            text-align: center;
+            color: #d196a1;
+            font-family: "Playwrite IE Guides", serif;
+  font-weight: 400;
+  font-style: normal;
+            
+        }
+        #imagem{
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #d196a1;
+        }
+        .flex {
+            display: flex;
+            justify-content:left;
+            align-items: center;
+        }
+        .flex input[type="number"] {
+            width: 60px;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #d196a1;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .button:hover {
+            background-color: #d196a1;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ffe6f2;
+            border: 1px solid ;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="imagem">
+            <img src="rosacha.jpg" alt="">
+        </div>
+       
+        <h1>Rosa Chá Convites</h1>
+        <p>Preencha o formulário abaixo para criar seu orçamento personalizado.</p>
+
+        <label for="modelo">Selecione o valor do modelo do convite:</label>
+        <div class="flex">
+            <select id="modelo">
+                <option value="3">R$3,00</option>
+                <option value="4">R$4,00</option>
+                <option value="5">R$5,00</option>
+            </select> &nbsp &nbsp &nbsp
+            <input type="number" id="quantidade_modelo" placeholder="Qtd" min="1" value="1">
+        </div>
+
+        <h3>Escolha os itens de papelaria personalizada:</h3>
+        <div id="itens">
+            <div class="flex">
+                <input type="checkbox" data-preco="3" class="item-checkbox">
+                <label>Agradecimento</label> &nbsp &nbsp &nbsp
+                <input type="number" class="item-quantidade" placeholder="Qtd" min="1">
+            </div>
+            <div class="flex">
+                <input type="checkbox" data-preco="3" class="item-checkbox">
+                <label>Lista de Presentes</label> &nbsp &nbsp &nbsp
+                <input type="number" class="item-quantidade" placeholder="Qtd" min="1">
+            </div>
+            <div class="flex">
+                <input type="checkbox" data-preco="3" class="item-checkbox">
+                <label>Convite Individual</label> &nbsp &nbsp &nbsp
+                <input type="number" class="item-quantidade" placeholder="Qtd" min="1">
+            </div>
+            <!-- Continue para os outros itens -->
+        </div>
+
+        <button class="button" onclick="resumirPedido()">Calcular Orçamento</button>
+        <h5>Frete fixo R$70,00</h5>
+
+        <div class="result" id="resultado"></div>
+
+        <button class="button" id="sendWhatsApp">Enviar Orçamento via WhatsApp</button>
+        <p class="message" id="thankYouMessage">Será uma honra participar de um momento tão especial!</p>
+    </div>
+
+    <script>
+        function resumirPedido() {
+            const modeloValor = parseFloat(document.getElementById('modelo').value);
+            const modeloQtd = parseInt(document.getElementById('quantidade_modelo').value);
+            let total = modeloValor * modeloQtd;
+
+            const itens = document.querySelectorAll('.item-checkbox');
+            itens.forEach((item, index) => {
+                if (item.checked) {
+                    const quantidade = parseInt(document.querySelectorAll('.item-quantidade')[index].value) || 0;
+                    const preco = parseFloat(item.dataset.preco);
+                    total += quantidade * preco;
+                }
+            });
+
+            total += 70; // Adiciona o frete
+
+            document.getElementById('resultado').textContent = `Total: R$${total.toFixed(2)}`;
+        }
+
+
+        document.getElementById('sendWhatsApp').addEventListener('click', function() {
+            const items = [
+                { name: 'Convite Clássico', price: 15.00 },
+                { name: 'Convite Luxo', price: 25.00 },
+                { name: 'Tag Personalizada', price: 5.00 }
+            ];
+            const total = items.reduce((sum, item) => sum + item.price, 0);
+            const message = items.map(item => `${item.name} - R$${item.price.toFixed(2)}`).join('%0A');
+            const totalMessage = `Total: R$${total.toFixed(2)}`;
+            const finalMessage = `Olá, segue meu orçamento:%0A%0A${message}%0A%0A${totalMessage}`;
+            const whatsappNumber = "75991919873";
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=55${whatsappNumber}&text=${finalMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+            
+            document.getElementById('thank-you-message').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
